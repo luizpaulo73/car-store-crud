@@ -70,3 +70,30 @@ func (c *carroController) CreateCarro(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, carroInserido)
 }
+
+func (c *carroController) DeleteCarro(ctx *gin.Context) {
+	id := ctx.Param("id_carro")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, "Id do carro nao pode ser nulo")
+		return
+	}
+
+	carroId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, "Id do carro invalido")
+		return
+	}
+
+	carro, err := c.CarroUseCase.DeleteCarro(carroId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if carro == nil {
+		ctx.JSON(http.StatusNotFound, "Carro não encontrado")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, carro)
+}

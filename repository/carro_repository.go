@@ -108,3 +108,34 @@ func (cr *CarroRepository) CreateCarro(carro model.Carro) (int, error) {
 	}
 	return id, nil
 }
+
+func (cr *CarroRepository) DeleteCarro(id_carro int) (*model.Carro, error) {
+	query, err := cr.connection.Prepare("DELETE FROM carro WHERE id_carro = $1 RETURNING marca, modelo")
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer query.Close()
+
+	var carro model.Carro
+
+	err = query.QueryRow(id_carro).Scan(
+		&carro.ID,
+		&carro.Marca,
+		&carro.Modelo,
+		&carro.Ano,
+		&carro.Cor,
+		&carro.Preco,
+		&carro.Quilometragem,
+		&carro.Transmissao,
+		&carro.Disponivel,)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, nil
+	}
+
+	return &carro, nil
+}

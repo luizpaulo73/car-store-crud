@@ -37,5 +37,7 @@ func main() {
 
 	server.POST("/carro/cadastrar", CarroController.CreateCarro)
 
+	server.DELETE("/carro/deletar/:id_carro", CarroController.DeleteCarro)
+
 	server.Run(":8000")
 }
