@@ -18,7 +18,7 @@ func NewCarroRepository (connection *sql.DB) CarroRepository {
 }
 
 func (pr *CarroRepository) GetCarros() ([]model.Carro, error) {
-	query := "SELECT * FROM carros"
+	query := "SELECT * FROM carro"
 	row, err := pr.connection.Query(query)
 	if err != nil {
 		fmt.Println(err)
@@ -28,7 +28,7 @@ func (pr *CarroRepository) GetCarros() ([]model.Carro, error) {
 
 	var listaCarro []model.Carro
 	var objCarro model.Carro
-	
+
 	for row.Next() {
 		err = row.Scan(
 			&objCarro.ID,
