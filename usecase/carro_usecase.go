@@ -26,3 +26,13 @@ func (carroUseCase *CarroUseCase) GetCarroById(id_carro int) (*model.Carro, erro
 	}
 	return carro, nil
 }
+
+func (carroUseCase *CarroUseCase) CreateCarro(carro model.Carro) (model.Carro, error) {
+	carroId, err := carroUseCase.reposytory.CreateCarro(carro)
+	if err != nil {
+		return model.Carro{}, err
+	}
+	carro.ID = carroId
+
+	return carro, nil
+}

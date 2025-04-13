@@ -79,3 +79,32 @@ func (cr *CarroRepository) GetCarroById(id_carro int) (*model.Carro, error) {
 
 	return &carro, nil
 }
+
+func (cr *CarroRepository) CreateCarro(carro model.Carro) (int, error) {
+
+	var id int
+	query, err := cr.connection.Prepare("INSERT INTO carro" + 
+										"(marca, modelo, ano, cor, preco, quilometragem, transmissao, disponivel)" +
+										"VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id_carro")
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	defer query.Close()
+
+	err = query.QueryRow(
+		carro.Marca,
+		carro.Modelo,
+		carro.Ano,
+		carro.Cor,
+		carro.Preco,
+		carro.Quilometragem,
+		carro.Transmissao,
+		carro.Disponivel ).Scan(&id)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	return id, nil
+}

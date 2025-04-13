@@ -35,5 +35,7 @@ func main() {
 
 	server.GET("/carro/:id_carro", CarroController.GetCarroById)
 
+	server.POST("/carro/cadastrar", CarroController.CreateCarro)
+
 	server.Run(":8000")
 }

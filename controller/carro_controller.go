@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/luizpaulo73/model"
 	"github.com/luizpaulo73/usecase"
 )
 
@@ -51,4 +52,21 @@ func (c *carroController) GetCarroById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, carro)
+}
+
+func (c *carroController) CreateCarro(ctx *gin.Context) {
+	var carro model.Carro
+	err := ctx.BindJSON(&carro)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	carroInserido, err := c.CarroUseCase.CreateCarro(carro)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, carroInserido)
 }
