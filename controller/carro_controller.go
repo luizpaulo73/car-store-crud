@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/luizpaulo73/usecase"
@@ -23,4 +24,31 @@ func (c *carroController) GetCarros(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, err)
 	}
 	ctx.JSON(http.StatusOK, carros)
+}
+
+func (c *carroController) GetCarroById(ctx *gin.Context) {
+	id := ctx.Param("id_carro")
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, "Id do carro nao pode ser nulo")
+		return
+	}
+
+	carroId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, "Id do carro invalido")
+		return
+	}
+
+	carro, err := c.CarroUseCase.GetCarroById(carroId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if carro == nil {
+		ctx.JSON(http.StatusNotFound, "Carro não encontrado")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, carro)
 }

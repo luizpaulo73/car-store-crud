@@ -33,5 +33,7 @@ func main() {
 
 	server.GET("/carros", CarroController.GetCarros)
 
+	server.GET("/carro/:id_carro", CarroController.GetCarroById)
+
 	server.Run(":8000")
 }
