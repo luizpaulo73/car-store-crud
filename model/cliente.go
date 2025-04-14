@@ -6,4 +6,5 @@ type Cliente struct {
 	Email    string `json:"email"`
 	Telefone string `json:"telefone"`
 	CPF      string `json:"cpf"`
+	Senha 	 string `json:"senha"`
 }

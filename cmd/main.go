@@ -20,10 +20,13 @@ func main() {
 
 	// camada repository
 	CarroRepository := repository.NewCarroRepository(dbConnection)
+	ClienteRepository := repository.NewClienteRepository(dbConnection)
 	//camada de usecase
 	CarroUsecase := usecase.NewCarroUseCase(CarroRepository)
+	ClienteUsecase := usecase.NewClienteUseCase(ClienteRepository)
 	//camada de controllers
 	CarroController := controller.NewCarroController(CarroUsecase)
+	ClienteController := controller.NewClienteController(ClienteUsecase)
 
 	server.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H {
@@ -40,6 +43,8 @@ func main() {
 	server.DELETE("/carro/deletar/:id_carro", CarroController.DeleteCarro)
 
 	server.PUT("/carro/atualizar/:id_carro", CarroController.UpdateCarro)
+
+	server.GET("/cliente/:id_cliente", ClienteController.GetClienteById)
 
 	server.Run(":8000")
 }

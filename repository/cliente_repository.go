@@ -41,3 +41,29 @@ func (cr *ClienteRepository) GetClienteById(id_cliente int) (*model.Cliente, err
 	}
 	return &cliente, nil
 }
+
+func (cr *ClienteRepository) CreateCliente(cliente model.Cliente) (int, error) {
+
+	var id int
+	query, err := cr.connection.Prepare("INSERT INTO cliente" + 
+										"(nome, email, telefone, cpf, senha)" +
+										"VALUES ($1, $2, $3, $4, $5) RETURNING id_cliente")
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	defer query.Close()
+
+	err = query.QueryRow(
+		cliente.Nome,
+		cliente.Email,
+		cliente.Telefone,
+		cliente.CPF,
+		cliente.Senha, ).Scan(&id)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	return id, nil
+}
