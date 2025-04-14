@@ -90,11 +90,6 @@ func (c *carroController) DeleteCarro(ctx *gin.Context) {
 		return
 	}
 
-	if carro == nil {
-		ctx.JSON(http.StatusNotFound, "Carro não encontrado")
-		return
-	}
-
 	ctx.JSON(http.StatusOK, carro)
 }
 
@@ -107,7 +102,9 @@ func (c *carroController) UpdateCarro(ctx *gin.Context) {
 	}
 
 	var carro model.Carro
-	if err := ctx.BindJSON(&carro); err != nil {
+
+	err = ctx.BindJSON(&carro);
+	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "JSON inválido"})
 		return
 	}

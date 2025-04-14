@@ -39,10 +39,10 @@ func (carroUseCase *CarroUseCase) CreateCarro(carro model.Carro) (model.Carro, e
 	return carro, nil
 }
 
-func (carroUseCase *CarroUseCase) DeleteCarro(id_carro int) (*model.Carro, error) {
+func (carroUseCase *CarroUseCase) DeleteCarro(id_carro int) (string, error) {
 	carro, err := carroUseCase.reposytory.DeleteCarro(id_carro)
 	if err != nil {
-		return nil, err
+		return "Carro não encontrado", err
 	}
 	return carro, nil
 }

@@ -32,7 +32,8 @@ func (cr *ClienteRepository) GetClienteById(id_cliente int) (*model.Cliente, err
 		&cliente.Nome,
 		&cliente.Email,
 		&cliente.Telefone,
-		&cliente.CPF,)
+		&cliente.CPF,
+		&cliente.Senha)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -66,4 +67,51 @@ func (cr *ClienteRepository) CreateCliente(cliente model.Cliente) (int, error) {
 		return 0, err
 	}
 	return id, nil
+}
+
+func (cr *ClienteRepository) DeleteCliente(id_cliente int) (string, error) {
+	query, err := cr.connection.Prepare("DELETE FROM cliente WHERE id_cliente = $1")
+	if err != nil {
+		fmt.Println(err)
+		return "Erro ao deletar cliente", err
+	}
+	defer query.Close()
+
+	_, err = query.Exec(id_cliente)
+	if err != nil {
+		return "Nao foi possivel deletar o cliente", err
+	}
+
+	return "Cliente deletado com sucesso", nil
+}
+
+func (cr *ClienteRepository) UpdateCliente(id_cliente int, cliente model.Cliente) (*model.Cliente, error) {
+
+	var id int
+
+	query, err := cr.connection.Prepare("UPDATE cliente SET nome = $1, email = $2, telefone" +
+							" = $3, cpf = $4, senha = $5 WHERE id_cliente" +
+							" = $6 RETURNING id_cliente")
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer query.Close()
+
+	err = query.QueryRow(
+		cliente.Nome,
+		cliente.Email,
+		cliente.Telefone,
+		cliente.CPF,
+		cliente.Senha,
+		id_cliente,
+		).Scan(&id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, nil
+	}
+	return &cliente, nil
+
 }
