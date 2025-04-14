@@ -8,21 +8,21 @@ import (
 )
 
 type CarroUseCase struct {
-	reposytory repository.CarroRepository
+	repository repository.CarroRepository
 }
 
 func NewCarroUseCase(repo repository.CarroRepository) CarroUseCase {
 	return CarroUseCase{
-		reposytory: repo,
+		repository: repo,
 	}
 }
 
 func (carroUsecase *CarroUseCase) GetCarros() ([]model.Carro, error) {
-	return carroUsecase.reposytory.GetCarros()
+	return carroUsecase.repository.GetCarros()
 }
 
 func (carroUseCase *CarroUseCase) GetCarroById(id_carro int) (*model.Carro, error) {
-	carro, err := carroUseCase.reposytory.GetCarroById(id_carro)
+	carro, err := carroUseCase.repository.GetCarroById(id_carro)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (carroUseCase *CarroUseCase) GetCarroById(id_carro int) (*model.Carro, erro
 }
 
 func (carroUseCase *CarroUseCase) CreateCarro(carro model.Carro) (model.Carro, error) {
-	carroId, err := carroUseCase.reposytory.CreateCarro(carro)
+	carroId, err := carroUseCase.repository.CreateCarro(carro)
 	if err != nil {
 		return model.Carro{}, err
 	}
@@ -40,7 +40,7 @@ func (carroUseCase *CarroUseCase) CreateCarro(carro model.Carro) (model.Carro, e
 }
 
 func (carroUseCase *CarroUseCase) DeleteCarro(id_carro int) (string, error) {
-	carro, err := carroUseCase.reposytory.DeleteCarro(id_carro)
+	carro, err := carroUseCase.repository.DeleteCarro(id_carro)
 	if err != nil {
 		return "Carro não encontrado", err
 	}
@@ -48,7 +48,7 @@ func (carroUseCase *CarroUseCase) DeleteCarro(id_carro int) (string, error) {
 }
 
 func (carroUseCase *CarroUseCase) UpdateCarro(id int, carro model.Carro) (model.Carro, error) {
-	updatedCarro, err := carroUseCase.reposytory.UpdateCarro(id, carro)
+	updatedCarro, err := carroUseCase.repository.UpdateCarro(id, carro)
 	if err != nil {
 		return model.Carro{}, err
 	}

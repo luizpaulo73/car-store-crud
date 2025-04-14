@@ -11,7 +11,7 @@ type CarroRepository struct {
 	connection *sql.DB
 }
 
-func NewCarroRepository (connection *sql.DB) CarroRepository {
+func NewCarroRepository(connection *sql.DB) CarroRepository {
 	return CarroRepository {
 		connection: connection,
 	}
