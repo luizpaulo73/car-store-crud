@@ -139,3 +139,37 @@ func (cr *CarroRepository) DeleteCarro(id_carro int) (*model.Carro, error) {
 
 	return &carro, nil
 }
+
+func (cr *CarroRepository) UpdateCarro(id_carro int, carro model.Carro) (*model.Carro, error) {
+	var id int
+
+	query, err := cr.connection.Prepare("UPDATE carro SET marca = $1, modelo = $2, ano" +
+							" = $3, cor = $4, preco = $5, quilometragem = $6, transmissao = $7, disponivel = $8 WHERE id_carro" +
+							" = $9 RETURNING id_carro")
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer query.Close()
+
+	err = query.QueryRow(
+		carro.Marca,
+		carro.Modelo,
+		carro.Ano,
+		carro.Cor,
+		carro.Preco,
+		carro.Quilometragem,
+		carro.Transmissao,
+		carro.Disponivel,
+		id_carro,
+	).Scan(&id)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, nil
+	}
+
+	return &carro, nil
+}

@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/luizpaulo73/model"
 	"github.com/luizpaulo73/repository"
 )
@@ -43,4 +45,18 @@ func (carroUseCase *CarroUseCase) DeleteCarro(id_carro int) (*model.Carro, error
 		return nil, err
 	}
 	return carro, nil
+}
+
+func (carroUseCase *CarroUseCase) UpdateCarro(id int, carro model.Carro) (model.Carro, error) {
+	updatedCarro, err := carroUseCase.reposytory.UpdateCarro(id, carro)
+	if err != nil {
+		return model.Carro{}, err
+	}
+	if updatedCarro == nil {
+		return model.Carro{}, errors.New("carro não encontrado")
+	}
+
+	updatedCarro.ID = id
+
+	return *updatedCarro, nil
 }

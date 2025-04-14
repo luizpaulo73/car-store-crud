@@ -39,5 +39,7 @@ func main() {
 
 	server.DELETE("/carro/deletar/:id_carro", CarroController.DeleteCarro)
 
+	server.PUT("/carro/atualizar/:id_carro", CarroController.UpdateCarro)
+
 	server.Run(":8000")
 }

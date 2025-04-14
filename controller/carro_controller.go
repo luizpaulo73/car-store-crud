@@ -97,3 +97,26 @@ func (c *carroController) DeleteCarro(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, carro)
 }
+
+func (c *carroController) UpdateCarro(ctx *gin.Context) {
+	idParam := ctx.Param("id_carro")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "ID inválido"})
+		return
+	}
+
+	var carro model.Carro
+	if err := ctx.BindJSON(&carro); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "JSON inválido"})
+		return
+	}
+
+	carroAtualizado, err := c.CarroUseCase.UpdateCarro(id, carro)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"erro": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, carroAtualizado)
+}
