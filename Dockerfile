@@ -1,11 +1,11 @@
 FROM golang:1.24
 
-WORKDIR /go/stc/app
+WORKDIR /go/src/app
 
 COPY . .
 
 EXPOSE 8000
 
-RUN go build -o  ./cmd/main.go
+RUN go build -o main ./cmd/main.go
 
 CMD ["./main"]
