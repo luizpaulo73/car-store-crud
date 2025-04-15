@@ -22,20 +22,26 @@ func main() {
 	CarroRepository := repository.NewCarroRepository(dbConnection)
 	ClienteRepository := repository.NewClienteRepository(dbConnection)
 	VendaRepository := repository.NewVendaRepository(dbConnection)
+	AuthRepository  := repository.NewAuthRepository(dbConnection)
 	//camada de usecase
 	CarroUsecase := usecase.NewCarroUseCase(CarroRepository)
 	ClienteUsecase := usecase.NewClienteUseCase(ClienteRepository)
 	VendaUsecase := usecase.NewVendaUseCase(VendaRepository)
+	AuthUsecase := usecase.NewAuthUseCase(AuthRepository)
 	//camada de controllers
 	CarroController := controller.NewCarroController(CarroUsecase)
 	ClienteController := controller.NewClienteController(ClienteUsecase)
 	VendaController := controller.NewVendaController(VendaUsecase)
+	AuthController := controller.NewAuthController(AuthUsecase)
 
 	server.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H {
 			"message": "pong",
 		})
 	})
+
+	//Auth
+	server.POST("/auth", AuthController.Login)
 
 	//Carro
 	server.GET("/carros", CarroController.GetCarros)
