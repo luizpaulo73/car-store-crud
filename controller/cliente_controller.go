@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/luizpaulo73/model"
 	"github.com/luizpaulo73/usecase"
+	"github.com/luizpaulo73/validators"
 )
 
 type clienteController struct {
@@ -22,19 +23,19 @@ func NewClienteController(usecase usecase.ClienteUseCase) clienteController {
 func (c *clienteController) GetClienteById(ctx *gin.Context){
 	id := ctx.Param("id_cliente")
 	if id == "" {
-		ctx.JSON(http.StatusBadRequest, "Id do cliente nao pode ser nulo")
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "Id do cliente nao pode ser nulo"})
 		return
 	}
 
 	clienteId, err := strconv.Atoi(id)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "Id do cliente invalido")
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "Id do cliente invalido"})
 		return
 	}
 
 	cliente, err := c.ClienteUseCase.GetClienteById(clienteId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"erro": err})
 		return
 	}
 
@@ -50,13 +51,19 @@ func (c *clienteController) CreateCliente(ctx *gin.Context) {
 	var cliente model.Cliente
 	err := ctx.BindJSON(&cliente)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": err})
+		return
+	}
+
+	err = validators.ValidarCliente(cliente)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": err.Error()})
 		return
 	}
 
 	clienteInserido, err := c.ClienteUseCase.CreateCliente(cliente)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"erro": err})
 		return
 	}
 
@@ -66,19 +73,19 @@ func (c *clienteController) CreateCliente(ctx *gin.Context) {
 func (c *clienteController) DeleteCliente(ctx *gin.Context) {
 	id := ctx.Param("id_cliente")
 	if id == "" {
-		ctx.JSON(http.StatusBadRequest, "Id do cliente nao pode ser nulo")
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "Id do cliente nao pode ser nulo"})
 		return
-	}
+}
 
 	clienteId, err := strconv.Atoi(id)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "Id do cliente invalido")
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "Id do cliente invalido"})
 		return
 	}
 
 	_, err = c.ClienteUseCase.DeleteCliente(clienteId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"erro": err})
 		return
 	}
 
@@ -94,9 +101,15 @@ func (c *clienteController) UpdateCliente(ctx *gin.Context) {
 	}
 
 	var cliente model.Cliente
-	err = ctx.BindJSON(&cliente);
+	err = ctx.BindJSON(&cliente)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"erro": "JSON inválido"})
+		return
+	}
+
+	err = validators.ValidarCliente(cliente)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"erro": err.Error()})
 		return
 	}
 

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/luizpaulo73/model"
 	"github.com/luizpaulo73/usecase"
+	"github.com/luizpaulo73/validators"
 )
 
 type VendaController struct {
@@ -55,6 +56,11 @@ func (vc *VendaController) CreateVenda(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, "JSON inválido")
 		return
+	}
+
+	err = validators.ValidarVenda(venda)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	vendaCriada, err := vc.VendaUsecase.CreateVenda(venda)

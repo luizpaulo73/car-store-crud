@@ -108,9 +108,10 @@ func (cr *ClienteRepository) UpdateCliente(id_cliente int, cliente model.Cliente
 		).Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return nil, fmt.Errorf("cliente com id %d não encontrado", id_cliente)
 		}
-		return nil, nil
+		fmt.Println("Erro ao atualizar cliente:", err)
+		return nil, err
 	}
 	return &cliente, nil
 
