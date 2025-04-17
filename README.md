@@ -16,8 +16,8 @@
 2. Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/crud-go.git
-cd crud-go
+git clone https://github.com/luizpaulo73/car-store-crud.git
+cd car-store-crud
 ```
 
 3. Suba os containers com Docker Compose:
