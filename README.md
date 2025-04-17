@@ -23,7 +23,10 @@ cd car-store-crud
 3. Suba os containers com Docker Compose:
 
 ```bash
-docker-compose up --build
+docker build -t crud-go .
+docker compose up -d
+docker compose start
+docker start go-app
 ```
 
 A API estará disponível em: http://localhost:8000
